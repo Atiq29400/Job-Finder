@@ -4,7 +4,7 @@ A full-stack web application for browsing actuarial job listings with web scrapi
 
 ## 🏗️ Architecture Overview
 
-- **Backend**: Flask REST API with SQLAlchemy ORM and PostgreSQL/MySQL database
+- **Backend**: Flask REST API with SQLAlchemy ORM and PostgreSQL database
 - **Frontend**: React.js single-page application with responsive design
 - **Scraper**: Selenium-based web scraper for automated job data collection
 - **Data Flow**: Scraper → Database → API → Frontend
@@ -12,33 +12,30 @@ A full-stack web application for browsing actuarial job listings with web scrapi
 ## 📁 Project Structure
 
 ```
-job-listing-app/
+Job-Finder/
 ├── backend/
 │   ├── app.py                 # Flask application entry point
-│   ├── models.py              # SQLAlchemy database models
-│   ├── routes.py              # API route definitions
+│   ├── models.py
+│   │   └ job.py               # SQLAlchemy database models
+│   ├── routes.py
+│   │   └ job.py               # API route definitions
 │   ├── config.py              # Database configuration
-│   ├── init_db.py             # Database initialization script
-│   ├── requirements.txt       # Python dependencies
-│   └── .env.example           # Environment variables template
+│   └── requirements.txt       # Python dependencies
 ├── frontend/
 │   ├── public/
 │   ├── src/
 │   │   ├── components/        # React components
-│   │   │   ├── JobCard.js
-│   │   │   ├── JobList.js
-│   │   │   ├── JobForm.js
-│   │   │   └── FilterBar.js
-│   │   ├── services/          # API service functions
-│   │   │   └── api.js
+│   │   │   ├── AddEditJob.tsx
+│   │   │   ├── DeleteJob.tsx
+│   │   │   ├── FilterSortJob.tsx
+│   │   │   └── ListJob.tsx
+│   │   ├── api.tsx          # API service functions
 │   │   ├── App.js             # Main React component
 │   │   └── index.js           # React entry point
 │   ├── package.json           # Node.js dependencies
 │   └── tailwind.config.js     # Tailwind CSS configuration
-├── scrap/
+├── Scraper/
 │   ├── scraper.py             # Main Selenium scraper
-│   ├── config.py              # Scraper configuration
-│   ├── utils.py               # Helper functions
 │   └── requirements.txt       # Scraper dependencies
 └── README.md
 ```
@@ -56,8 +53,8 @@ job-listing-app/
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
-cd job-listing-app
+git clone https://github.com/Atiq29400/Job-Finder.git
+cd Job-Finder
 ```
 
 ### 2. Backend Setup
@@ -78,16 +75,11 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Copy environment variables template
-cp .env.example .env
-
-# Edit .env file with your database credentials
-# DATABASE_URL=postgresql://username:password@localhost/job_listings
-# or
-# DATABASE_URL=mysql://username:password@localhost/job_listings
-
-# Initialize database
-python init_db.py
+# Edit postgres database URL in config.py file
+SQLALCHEMY_DATABASE_URI = os.getenv(
+   "DATABASE_URL",
+   "postgresql://postgres:password@localhost:5432/jobfinder"
+)
 
 # Start Flask development server
 python app.py
@@ -105,10 +97,10 @@ cd frontend
 npm install
 
 # Start React development server
-npm start
+npm run dev
 ```
 
-The frontend will be available at `http://localhost:3000`
+The frontend will be available at `http://localhost:5173`
 
 ### 4. Scraper Setup
 
@@ -119,14 +111,11 @@ cd scrap
 # Install dependencies (if not using same venv as backend)
 pip install -r requirements.txt
 
-# Install ChromeDriver
-# On macOS with Homebrew:
-brew install chromedriver
-
 # On Ubuntu:
 sudo apt-get install chromium-chromedriver
 
-# On Windows: Download from https://chromedriver.chromium.org/
+# To run Scraper
+python scraper.py
 ```
 
 ## 🔧 API Endpoints
